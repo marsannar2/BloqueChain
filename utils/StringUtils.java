@@ -1,8 +1,6 @@
 package utils;
 import java.security.MessageDigest;
 
-import javax.management.RuntimeErrorException;
-
 public class StringUtils {
     
     public static String applySHA224(String input){
