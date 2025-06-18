@@ -1,3 +1,4 @@
+package block;
 import java.util.Date;
 import utils.StringUtils;
 public class Block{
@@ -47,5 +48,7 @@ public class Block{
     public void setData(Integer data){
         this.data = data;
     }
+
+    
 
 }
