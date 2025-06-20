@@ -12,6 +12,8 @@ public class Block{
     // Usaremos el timestamp para la generación del hash de cada bloque
     private long timeStamp;
 
+    private int nonce;
+
     public Block(Integer data, String previousHash){
         long timeStamp = new Date().getTime();
         this.data = data;
@@ -24,9 +26,23 @@ public class Block{
         String hash = StringUtils.applySHA224( 
 			previousHash +
 			Long.toString(timeStamp) +
+            Integer.toString(nonce) +
 			data 
 			);
         return hash;
+    }
+
+    // la dificultad representa el número de ceros necesarios para crear un hash válido para un bloque
+    public void mineBlock(int difficulty){
+        String target = "0".repeat(difficulty);
+        String tempHash = "";
+        // forzamos a que el hash empiece con un número de ceros exactos
+        while(!tempHash.startsWith(target)){
+            nonce ++;
+            tempHash = createHash();
+        }
+
+        this.hash = tempHash;
     }
 
     public String getHash(){
