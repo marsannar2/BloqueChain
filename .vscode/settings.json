@@ -1,5 +1,6 @@
 {
   "java.project.referencedLibraries": [
-    "lib/gson-2.6.2.jar"
+    "lib/gson-2.6.2.jar",
+    "lib/bcprov-jdk18on-1.81.jar"
   ]
 }
