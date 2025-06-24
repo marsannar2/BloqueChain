@@ -2,13 +2,14 @@ package wallet;
 
 import java.security.PublicKey;
 import java.security.SecureRandom;
-
+import java.security.Security;
 import java.security.spec.ECGenParameterSpec;
 
 
 import java.security.PrivateKey;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 
 public class Wallet {
@@ -25,9 +26,10 @@ public class Wallet {
 
     public void createKeyPair() throws Exception{
         try{
+            Security.addProvider(new BouncyCastleProvider());
             //Generador de firmas con el algoritmo de curvas elípticas y proveedor BounceyCastle 
             KeyPairGenerator kpg = KeyPairGenerator.getInstance("ECDSA","BC");
-            SecureRandom random = SecureRandom.getInstance("NativePRNG");
+            SecureRandom random = new SecureRandom();
             // Parámetros de curva elíptica inicializados con una configuración recomendada
             ECGenParameterSpec specs = new ECGenParameterSpec("sect233k1");
 
@@ -43,6 +45,12 @@ public class Wallet {
         
     }
 
+    public PublicKey getPublicKey(){
+        return publicKey;
+    }
 
+    public PrivateKey getPrivateKey(){
+        return privateKey;
+    }
 
 }

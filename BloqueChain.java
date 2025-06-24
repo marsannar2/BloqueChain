@@ -4,7 +4,9 @@ import com.google.gson.GsonBuilder;
 
 
 import block.Block;
+import transaction.Transaction;
 import utils.BlockUtils;
+import wallet.Wallet;
 
 public class BloqueChain {
 
@@ -12,7 +14,8 @@ public class BloqueChain {
 
     public static int difficulty = 5;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+
 
         //El hash previo será 0 debido a que es el primer bloque de la cadena
         Block firstBlock = new Block(4000,"0");
@@ -38,6 +41,17 @@ public class BloqueChain {
         GsonBuilder gson = new GsonBuilder();
         String blockChainToJson = gson.setPrettyPrinting().create().toJson(blockchain);
         System.out.println(blockChainToJson);
+
+        
+        Wallet firstWallet = new Wallet();
+		Wallet secondWallet = new Wallet();
+        System.out.println(firstWallet.getPublicKey());
+        System.out.println(secondWallet.getPublicKey());
+
+        Transaction transaction = new Transaction(firstWallet.getPublicKey(), secondWallet.getPublicKey(), 4.0, null);
+        
+        transaction.createSignature(firstWallet.getPrivateKey());
+        System.out.println("La transacción ha sido verificada? : " + transaction.verifySignature());
 
     }
     
