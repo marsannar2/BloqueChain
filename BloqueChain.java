@@ -1,16 +1,21 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import com.google.gson.GsonBuilder;
 
 
 import block.Block;
 import transaction.Transaction;
+import transaction.TransactionOutput;
 import utils.BlockUtils;
 import wallet.Wallet;
 
 public class BloqueChain {
 
     public static List<Block> blockchain = new ArrayList<>();
+    public static Map<String,TransactionOutput> UnspentTransactionOutputs = new HashMap<>();
 
     public static int difficulty = 5;
 
