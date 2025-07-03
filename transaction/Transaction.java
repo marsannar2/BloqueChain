@@ -19,14 +19,14 @@ public class Transaction {
 
     private byte [] signature;
 
-    private ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
+    private List<TransactionInput> inputs = new ArrayList<TransactionInput>();
 
-	private ArrayList<TransactionOutput> outputs = new ArrayList<TransactionOutput>();
+	private List<TransactionOutput> outputs = new ArrayList<TransactionOutput>();
 
     //variable que evita la existencia de transacciones con hashes iguales
     private static int sequence = 0;
 
-    public Transaction(PublicKey senderKey,PublicKey receiverKey,Double value,ArrayList<TransactionInput> inputs){
+    public Transaction(PublicKey senderKey,PublicKey receiverKey,Double value,List<TransactionInput> inputs){
 
         this.senderKey = senderKey;
         this.receiverKey = receiverKey;
@@ -114,6 +114,10 @@ public class Transaction {
 
     public Double getValue(){
         return value;
+    }
+
+    public String getHash(){
+        return hash;
     }
 
     

@@ -7,8 +7,9 @@ public class TransactionInput {
     // contiene la transacción que todavía no ha sido gastada 
     private TransactionOutput UTXO;
 
-    public TransactionInput(String transactionOutputId){
+    public TransactionInput(String transactionOutputId,TransactionOutput UTXO){
         this.transactionOutputId = transactionOutputId;
+        this.UTXO = UTXO;
     }
 
     public String getTransactionOutputId(){

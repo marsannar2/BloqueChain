@@ -11,6 +11,7 @@ import block.Block;
 import transaction.Transaction;
 import transaction.TransactionOutput;
 import utils.BlockUtils;
+import utils.StringUtils;
 import wallet.Wallet;
 
 public class BloqueChain {
@@ -58,6 +59,14 @@ public class BloqueChain {
         
         transaction.createSignature(firstWallet.getPrivateKey());
         System.out.println("La transacción ha sido verificada? : " + transaction.verifySignature());
+
+        TransactionOutput example = new TransactionOutput(transaction.getHash(), 4.0, firstWallet.getPublicKey());
+        UnspentTransactionOutputs.put(example.getId(), example);
+
+        Transaction newtransaction = firstWallet.sendFunds(secondWallet.getPublicKey(), 3.0);
+        newtransaction.processTransaction();
+        String newtransactionToJson = gson.setPrettyPrinting().create().toJson(newtransaction);
+        System.out.println(newtransactionToJson);
 
     }
     

@@ -42,7 +42,7 @@ public class TransactionOutput {
     }
 
     public boolean verifyOwnership(PublicKey publickey){
-        return getPublicKey().equals(owner);
+        return getPublicKey() == owner;
     }
 
 

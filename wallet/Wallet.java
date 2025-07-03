@@ -4,7 +4,16 @@ import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.security.spec.ECGenParameterSpec;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import main.BloqueChain;
+import transaction.Transaction;
+import transaction.TransactionInput;
+import transaction.TransactionOutput;
+import utils.StringUtils;
 
 import java.security.PrivateKey;
 import java.security.KeyPair;
@@ -19,6 +28,8 @@ public class Wallet {
     
     // firma digital de la cartera que controla el acceso a sus transacciones
     private PrivateKey privateKey;
+
+    private Map<String,TransactionOutput> UnspentTransactionsOutputs = new HashMap<>();
 
     public Wallet() throws Exception{
         createKeyPair();
@@ -45,12 +56,64 @@ public class Wallet {
         
     }
 
+    public Map<String,TransactionOutput> setUnspentTransactions(){
+
+       Map<String,TransactionOutput> transactions = BloqueChain.UnspentTransactionOutputs;
+       for(Map.Entry<String,TransactionOutput> transaction : transactions.entrySet()){
+            TransactionOutput output = transaction.getValue();
+            if(output.verifyOwnership(publicKey)){
+                UnspentTransactionsOutputs.put(output.getId(),output);
+            }
+       }
+       return UnspentTransactionsOutputs;
+    }
+
+    public Double getBalance(){
+        Double balance = 0.0;
+        this.UnspentTransactionsOutputs = setUnspentTransactions();
+        for(TransactionOutput transactionOutput: UnspentTransactionsOutputs.values()){
+            balance += transactionOutput.getAmount();
+        }
+        return balance;
+        
+    }
+
+    public Transaction sendFunds(PublicKey receiver, Double value) throws Exception{
+        //Se espera que el remitente tenga los fondos suficientes para realizar la transacción
+        if(getBalance() < value){
+            throw new Exception("Not enough funds to send transaction");
+        }
+
+        List<TransactionInput> inputs = new ArrayList<>();
+        Double total = 0.0;
+        for(Map.Entry<String,TransactionOutput> transaction : BloqueChain.UnspentTransactionOutputs.entrySet()){
+            TransactionOutput transactionOutput = transaction.getValue();
+            total += transactionOutput.getAmount();
+            inputs.add(new TransactionInput(transactionOutput.getId(),transactionOutput));
+            // se detiene cuando alcanza la cantidad necesaria a enviar
+            if(total >= value) break;
+        }
+
+        Transaction newTransaction = new Transaction(publicKey, receiver, value, inputs);
+        newTransaction.createSignature(privateKey);
+        
+
+        for(TransactionInput input:inputs) UnspentTransactionsOutputs.remove(input.getTransactionOutputId());
+        
+        return newTransaction;
+
+    }
+
     public PublicKey getPublicKey(){
         return publicKey;
     }
 
     public PrivateKey getPrivateKey(){
         return privateKey;
+    }
+
+    public Map<String,TransactionOutput> getUnspentTransactions(){
+        return UnspentTransactionsOutputs;
     }
 
 }
