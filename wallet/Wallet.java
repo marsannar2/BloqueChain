@@ -13,7 +13,7 @@ import main.BloqueChain;
 import transaction.Transaction;
 import transaction.TransactionInput;
 import transaction.TransactionOutput;
-import utils.StringUtils;
+
 
 import java.security.PrivateKey;
 import java.security.KeyPair;

@@ -1,7 +1,9 @@
 package utils;
+import java.util.ArrayList;
 import java.util.List;
 
 import block.Block;
+import transaction.Transaction;
 
 public class BlockUtils {
 
@@ -50,6 +52,27 @@ public class BlockUtils {
 
         return true;
 
+    }
+
+    public static String getMerkleRoot(List<Transaction> transactions){
+        //partimos de momento de un árbol de merkle no binario
+        List<String> previousTreeLayer = transactions.stream().map(transaction -> transaction.getHash()).toList();
+        List<String> actualTreeLayer = new ArrayList<>();
+        Integer count = previousTreeLayer.size();
+        String sumHash;
+
+        while(count > 1){
+            for(int i = 1 ; i < previousTreeLayer.size() ; i++){
+                sumHash = StringUtils.applySHA224(previousTreeLayer.get(i-1) + previousTreeLayer.get(i));
+                actualTreeLayer.add(sumHash);
+            }
+            previousTreeLayer = actualTreeLayer;
+            count = previousTreeLayer.size();
+        }
+
+        //obtenemos el hash de la raíz del árbol merkle
+        String merkleRoot = count == 1? actualTreeLayer.get(0):"";
+        return merkleRoot;
     }
     
     

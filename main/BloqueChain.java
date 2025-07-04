@@ -11,7 +11,7 @@ import block.Block;
 import transaction.Transaction;
 import transaction.TransactionOutput;
 import utils.BlockUtils;
-import utils.StringUtils;
+
 import wallet.Wallet;
 
 public class BloqueChain {
@@ -25,15 +25,15 @@ public class BloqueChain {
 
 
         //El hash previo será 0 debido a que es el primer bloque de la cadena
-        Block firstBlock = new Block(4000,"0");
+        Block firstBlock = new Block("0");
         firstBlock.mineBlock(difficulty);
         System.out.println("Hash del primer bloque: " + firstBlock .getHash());
 
-        Block secondBlock = new Block(5000,firstBlock.getHash());
+        Block secondBlock = new Block(firstBlock.getHash());
         secondBlock.mineBlock(difficulty);
         System.out.println("Hash del segundo bloque: " + secondBlock.getHash());
 
-        Block thirdBlock = new Block(5500,secondBlock.getHash());
+        Block thirdBlock = new Block(secondBlock.getHash());
         thirdBlock.mineBlock(difficulty);
         System.out.println("Hash del tercer bloque: " + thirdBlock.getHash());
 

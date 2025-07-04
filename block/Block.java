@@ -1,5 +1,10 @@
 package block;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import transaction.Transaction;
+import utils.BlockUtils;
 import utils.StringUtils;
 public class Block{
 
@@ -8,15 +13,18 @@ public class Block{
     private String previousHash;
 
     // La información que contendrán serán enteros de momento;
-    private Integer data;
+    private List<Transaction> transactions;
     // Usaremos el timestamp para la generación del hash de cada bloque
     private long timeStamp;
 
+    // Representa los fragmentos de cada transacción en un único hash, hace más facil la verificación del bloque
+    private String merkleRoot;
+
     private int nonce;
 
-    public Block(Integer data, String previousHash){
+    public Block(String previousHash){
         long timeStamp = new Date().getTime();
-        this.data = data;
+        this.transactions = new ArrayList<>();
         this.previousHash = previousHash;
         this.timeStamp = timeStamp;
         this.hash = createHash();
@@ -27,7 +35,7 @@ public class Block{
 			previousHash +
 			Long.toString(timeStamp) +
             Integer.toString(nonce) +
-			data 
+			merkleRoot 
 			);
         return hash;
     }
@@ -42,27 +50,24 @@ public class Block{
             tempHash = createHash();
         }
 
+        this.merkleRoot = BlockUtils.getMerkleRoot(transactions);
         this.hash = tempHash;
     }
 
     public String getHash(){
-        return this.hash;
+        return hash;
     }
 
     public String getPreviousHash(){
-        return this.previousHash;
+        return previousHash;
     }
 
-    public Integer getData(){
-        return this.data;
+    public List<Transaction> getTransactions(){
+        return transactions;
     }
 
     public long getTimeStamp(){
-        return this.timeStamp;
-    }
-
-    public void setData(Integer data){
-        this.data = data;
+        return timeStamp;
     }
 
     
