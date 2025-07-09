@@ -20,6 +20,7 @@ public class BloqueChain {
     public static Map<String,TransactionOutput> UnspentTransactionOutputs = new HashMap<>();
 
     public static int difficulty = 5;
+    public static Transaction genesisTransaction;
 
     public static void main(String[] args) throws Exception {
 
@@ -41,20 +42,33 @@ public class BloqueChain {
         //firstBlock.setData(4500);
         //System.out.println("El hash del bloque modificado coincide con el nuevo hash? : " + BlockUtils.checkCalcutatedHash(firstBlock));
 
-        blockchain = List.of(firstBlock, secondBlock, thirdBlock);
+        blockchain = new ArrayList<>(List.of(firstBlock, secondBlock, thirdBlock));
         System.out.println("Es la cadena de bloques válida? : " + BlockUtils.isChainValid(blockchain,difficulty)); 
+
+        
+        
+        Wallet firstWallet = new Wallet();
+		Wallet secondWallet = new Wallet();
+        Wallet coinbase = new Wallet();
+        System.out.println(firstWallet.getPublicKey());
+        System.out.println(secondWallet.getPublicKey());
+
+        genesisTransaction = new Transaction(coinbase.getPublicKey(), firstWallet.getPublicKey(), 100.0, null);
+        genesisTransaction.createSignature(coinbase.getPrivateKey());
+        //Indica que se trata del bloque génesis
+        genesisTransaction.setHash("0");
+        genesisTransaction.getOutputs().add(new TransactionOutput(genesisTransaction.getHash(), genesisTransaction.getValue(),genesisTransaction.getReceiverKey()));
+        UnspentTransactionOutputs.put(genesisTransaction.getOutputs().get(0).getId(), genesisTransaction.getOutputs().get(0));
+
+        Block genesis = new Block("0");
+		genesis.addTransaction(genesisTransaction);
+		addBlock(genesis);
 
         //Convertimos la cadena de bloques a formato JSON
         GsonBuilder gson = new GsonBuilder();
         String blockChainToJson = gson.setPrettyPrinting().create().toJson(blockchain);
         System.out.println(blockChainToJson);
-
-        
-        Wallet firstWallet = new Wallet();
-		Wallet secondWallet = new Wallet();
-        System.out.println(firstWallet.getPublicKey());
-        System.out.println(secondWallet.getPublicKey());
-
+        /* 
         Transaction transaction = new Transaction(firstWallet.getPublicKey(), secondWallet.getPublicKey(), 4.0, null);
         
         transaction.createSignature(firstWallet.getPrivateKey());
@@ -67,8 +81,13 @@ public class BloqueChain {
         newtransaction.processTransaction();
         String newtransactionToJson = gson.setPrettyPrinting().create().toJson(newtransaction);
         System.out.println(newtransactionToJson);
-
+        */
     }
+
+    public static void addBlock(Block newBlock) {
+		newBlock.mineBlock(difficulty);
+		blockchain.add(newBlock);
+	}
     
     
 }

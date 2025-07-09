@@ -54,6 +54,20 @@ public class Block{
         this.hash = tempHash;
     }
 
+    public void addTransaction(Transaction transaction) throws Exception{
+        if(transaction == null) throw new Exception("The transaction could not be found");
+        //En caso de ser bloque génesis, se añade
+        try{
+            // si no es el bloque génesis, procesar la transacción
+            if(getPreviousHash()!="0") transaction.processTransaction();
+            transactions.add(transaction);
+            System.out.println("The transaction " + transaction.getHash() + "was added to block succesfully"); 
+        }catch(Exception e){
+            throw new Exception(e);
+        }
+        
+    }
+
     public String getHash(){
         return hash;
     }
@@ -69,6 +83,7 @@ public class Block{
     public long getTimeStamp(){
         return timeStamp;
     }
+
 
     
 

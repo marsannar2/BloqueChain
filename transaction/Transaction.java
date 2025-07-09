@@ -73,9 +73,7 @@ public class Transaction {
 
         // se registran estas salidas en la red de bloques
         for(TransactionOutput output: outputs){
-            if(!BloqueChain.UnspentTransactionOutputs.containsKey(output.getId())){
-                BloqueChain.UnspentTransactionOutputs.put(output.getId(),output);
-            } 
+            BloqueChain.UnspentTransactionOutputs.put(output.getId(),output);  
         }
 
         //vaciamos la memoria de las salidas sin gastar de la red de bloques
@@ -118,6 +116,18 @@ public class Transaction {
 
     public String getHash(){
         return hash;
+    }
+
+    public PublicKey getSenderKey(){
+        return senderKey;
+    }
+
+    public PublicKey getReceiverKey(){
+        return receiverKey;
+    }
+
+    public void setHash(String hash){
+        this.hash = hash;
     }
 
     

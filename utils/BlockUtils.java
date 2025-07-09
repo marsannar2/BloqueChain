@@ -71,7 +71,7 @@ public class BlockUtils {
         }
 
         //obtenemos el hash de la raíz del árbol merkle
-        String merkleRoot = count == 1? actualTreeLayer.get(0):"";
+        String merkleRoot = actualTreeLayer.size() == 1? actualTreeLayer.get(0):"";
         return merkleRoot;
     }
     
